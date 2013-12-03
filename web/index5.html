@@ -16,6 +16,12 @@ and open the template in the editor.
             td#conversionAeuros,#conversionApesetas{
                 color: darkseagreen;
             }
+            #conversionApesetas
+            {
+                width: 140px;
+                height: 40px;
+                border: 1px solid #999;
+            }
         </style>
         <script>
             function funcionEuros(){
@@ -45,7 +51,7 @@ and open the template in the editor.
                     <td><input type="text" name="pts">pesetas</td>
                 </tr>
                 <tr>
-                    <td id="conversionApesetas"></td>
+                    <td><div id="conversionApesetas"></div></td>
                     <td id="conversionAeuros"></td>
                 </tr>
                 <tr>
