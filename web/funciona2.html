@@ -14,19 +14,21 @@ and open the template in the editor.
                 
                 //pesetasEuros = Number(pesetasEuros);
                 var btPesetasEuros = document.getElementById("btPesetasEuros");
-                var btEurosPesetas = document.getElementById("btEurosPesetas");
-                valorMoneda = 166.386;
+                
+                
                 btPesetasEuros.onclick = function() {
-                    var pesetasEuros = document.getElementById("pesetasEuros").value;
-                    noConvertidoEuros = pesetasEuros / valorMoneda;
-                    document.getElementById('euros').value = noConvertidoEuros;
+                    var valorMoneda = 166.386;
+                    var pesetasEuros = document.conversor.euros.value;
+                   var noConvertidoEuros = pesetasEuros * valorMoneda;
+                    document.getElementById('euros').innerHTML = noConvertidoEuros;
                     /* if(noConvertido){
                      
                      }*/
                 }
+                var btEurosPesetas = document.getElementById("btEurosPesetas");
                 btEurosPesetas.onclick = function() {
-                     noConvertidoPesetas = pesetasEuros * 166.386;
-                            /* if(noConvertido){
+                    noConvertidoPesetas = pesetasEuros * 166.386;
+                    /* if(noConvertido){
                              
                              }*/
 

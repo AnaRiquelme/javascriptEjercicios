@@ -26,49 +26,48 @@ and open the template in the editor.
             }
         </style>
         <script>
-            window.onload = function() {
-
-                var btPesetasEuros = document.getElementById('btPesetasEuros');
-
-                btPesetasEuros.onclick = function() {
-                    var valorMoneda = 166.386;
-                    var euros = document.conversor.pesetasEuros.value;
-                    var conversionPesetas = euros / valorMoneda;
-                   
-                    
-                     document.getElementById('euros').innerHTML = conversionPesetas + " pts";
-                }
-                var btEurosPesetas = document.getElementById("btEurosPesetas");
-                btEurosPesetas.onclick = function() {
-                    var noConvertidoPesetas = pesetasEuros * 166, 386;
-                            /* if(noConvertido){
-                             
-                             }*/
-
-                }
-
+            window.onload = initForm;
+            function initForm () {
+                form  = document.getElementById('formulario');
+                form2  = document.getElementById('formulario2');
+                form.onsubmit = checkearForm;  
+                form2.onsubmit = checkearForm2; 
+            }
+            function  checkearForm () { 
+                var valorMoneda = 166.386;
+                hola = document.getElementById('formulario').entrada.value;
+                         
+                resultado = hola * valorMoneda;
+                
+                document.getElementById('formulario').resultado.value = resultado;
+                
+                return false;
+            }
+            function  checkearForm2 () { 
+                var valorMoneda = 166.386;
+                hola2 = document.getElementById('formulario2').entrada2.value;
+                         
+                conversionEuros = hola2 / valorMoneda;
+                resultado2 = Math.round(conversionEuros * 100) / 100;
+                document.getElementById('formulario2').resultado2.value = resultado2;
+                
+                return false;
             }
         </script>
     </head>
     <body>
-        <fieldset>
-            <legend>Conversor a Euros</legend>
-            <form name="conversor" method="post">
-                <label>Pesetas</label>
-                <input type="text" name="pesetasEuros"/>
-                <label>Euros</label>
-                <div id="euros"></div>
-                <button id="btPesetasEuros">Convertir</button>
-            </form>
-        </fieldset>
-        <fieldset>
-            <legend>Conversor a Pesetas</legend>
-            <form>
-                <label>Euros</label>
-                <input type="text" id="eurosPesetas"/>
-                <input type="text" id="pesetas"/>
-                <button id="btEurosPesetas">Convertir</button>
-            </form>
-        </fieldset>
+
+
+        <form id="formulario" action="action.html" method="get">
+            <p><input type="text" name="entrada" /></p>
+            <p><input type="text" name="resultado" /></p>
+            <p><input type="submit" /></p>
+        </form>
+        <br/>
+        <form id="formulario2" action="action.html" method="get">
+            <p><input type="text" name="entrada2" /></p>
+            <p><input type="text" name="resultado2" /></p>
+            <p><input type="submit" /></p>
+        </form>
     </body>
 </html>
