@@ -1,0 +1,325 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+
+            var board = new Array();
+            var test_pos = new Array(81);
+            var val_col = new Array(9);
+            var constraints = new Array(81);
+            var testcase = new Array();
+            var animate_count = 0;
+            var animate_delay = 100;
+            var animate = 0;
+            var start_time;
+            var recs;
+
+            /* throw in some init code */
+            for (var x = 0; x < 81; x++) {
+                constraints[x] = new Array(12);
+            }
+            testcase[0] = new Array(81);
+            testcase[0] = [5, 3, 4, 6, 7, 8, 9, 1, 2, 6, 7, 2, 1, 9, 5, 3, 4, 8, 1, 9, 8, 3, 4, 2, 5, 6, 7, 8, 5, 9, 7, 6, 1, 4, 2, 3, 4, 2, 6, 8, 5, 3, 7, 9, 1, 7, 1, 3, 9, 2, 4, 8, 5, 6, 9, 6, 1, 5, 3, 7, 2, 8, 4, 2, 8, 7, 4, 1, 9, 6, 3, 5, 3, 4, 5, 2, 8, 6, 1, 7, 9];
+            testcase[1] = new Array(81);
+            testcase[1] = [0, 0, 8, 0, 0, 4, 0, 2, 0, 0, 0, 5, 8, 0, 0, 7, 0, 6, 7, 0, 0, 0, 0, 5, 0, 0, 4, 0, 1, 0, 9, 2, 0, 0, 0, 7, 0, 3, 7, 5, 4, 1, 2, 6, 0, 6, 0, 0, 0, 7, 8, 0, 1, 0, 1, 0, 0, 4, 0, 0, 0, 0, 2, 2, 0, 3, 0, 0, 7, 1, 0, 0, 0, 7, 0, 1, 0, 0, 9, 0, 0];
+            testcase[2] = new Array(81);
+            testcase[2] = [0, 0, 0, 0, 3, 8, 0, 4, 0, 0, 0, 0, 6, 5, 0, 0, 8, 1, 1, 0, 5, 0, 4, 0, 0, 7, 0, 4, 0, 0, 0, 0, 0, 1, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 9, 0, 1, 0, 0, 8, 0, 6, 0, 4, 9, 3, 0, 0, 7, 4, 0, 0, 0, 0, 2, 0, 9, 1, 0, 0, 0, 0];
+            testcase[3] = new Array(81);
+            testcase[3] = [0, 7, 0, 4, 5, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 4, 8, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 1, 0, 9, 4, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 7, 0, 6, 0, 7, 0, 0, 0, 0, 0, 6, 0, 0, 9, 8, 0, 7, 0, 0, 0, 1, 0, 0, 0, 0, 0, 9, 2, 0, 7, 0];
+            testcase[4] = new Array(81);
+            testcase[4] = [0, 0, 0, 0, 0, 1, 0, 2, 0, 3, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 0, 0, 2, 0, 0, 0, 0, 0, 6, 0, 5, 0, 0, 3, 0, 0, 8, 0, 4, 0, 0, 0, 0, 0, 9, 0, 0, 9, 0, 0, 0, 0, 2, 0, 0, 0, 0, 8, 0, 0, 5, 0, 4, 0, 0, 0, 0, 1, 7, 0, 0, 0, 0, 0];
+            testcase[5] = new Array(81);
+            testcase[5] = [1, 0, 0, 0, 0, 7, 0, 9, 0, 0, 3, 0, 0, 2, 0, 0, 0, 8, 0, 0, 9, 6, 0, 0, 5, 0, 0, 0, 0, 5, 3, 0, 0, 9, 0, 0, 0, 1, 0, 0, 8, 0, 0, 0, 2, 6, 0, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 7, 0, 0, 7, 0, 0, 0, 3, 0, 0];
+
+
+            function getBoard() {
+                var x;
+                for (var r = 0; r < 9; r++)
+                    for (var c = 0; c < 9; c++) {
+                        x = 0;
+                        x = document.getElementById("box" + r + "-" + c).value;
+                        if (!(x >= 0 && x <= 9)) {
+                            status("Invalid entries in board row:" + (r + 1) + " col:" + (c + 1));
+                            return false;
+                        }
+                        if (x == "")
+                            x = 0;
+                        board[r * 9 + c] = Number(x);
+                    }
+                return true;
+            }
+
+            function getConstraints(pos) {
+                var canBe = new Array(10);
+
+                for (var p = 0; p < 81; p++) {
+                    for (var x = 0; x < 11; x++)
+                        constraints[p][x] = 0;
+                    if (pos[p] >= 1 && pos[p] <= 9) {
+                        constraints[p][0] = 1;
+                        constraints[p][1] = pos[p];
+                    }
+                    else {
+                        /* non-null */
+                        constraints[p][0] = 0;
+                        constraints[p][1] = 2;	/* first index */
+                        var r = Math.floor(p / 9);
+                        var c = p % 9;
+
+                        for (var x = 1; x <= 9; x++)
+                            canBe[x] = x;
+                        for (var x = 0; x < 9; x++)
+                            if (pos[r * 9 + x] > 0)
+                                canBe[Number(pos[r * 9 + x])] = 0;
+                        for (var x = 0; x < 9; x++)
+                            if (pos[x * 9 + c] > 0)
+                                canBe[pos[x * 9 + c]] = 0;
+
+                        var i = 2;
+                        for (var x = 1; x <= 9; x++)
+                            if (canBe[x] > 0)
+                                constraints[p][i++] = x;
+                    }
+                }
+            }
+
+            function status(txt) {
+                document.getElementById("status").innerHTML = txt;
+            }
+
+            function validate(pos) {
+                var r_sum, c_sum;
+
+                for (var c = 0; c < 9; c++)
+                    val_col[c] = 0;
+
+                for (var r = 0; r < 9; r++) {
+                    r_sum = 0;
+                    for (var c = 0; c < 9; c++) {
+                        r_sum += pos[r * 9 + c];
+                        val_col[c] += pos[r * 9 + c];
+                    }
+                    if (r_sum != 45)
+                        return -2048;
+                }
+                for (var c = 0; c < 9; c++)
+                    if (val_col[c] != 45)
+                        return -(c + 1);
+
+                for (var b_r = 0; b_r < 3; b_r++) {
+                    for (var b_c = 0; b_c < 3; b_c++) {
+                        var b_sum = 0;
+                        for (var r = 0; r < 3; r++)
+                            for (var c = 0; c < 3; c++)
+                                b_sum += pos[ (b_r * 3 + r) * 9 + (b_c * 3 + c) ];
+                        if (b_sum != 45)
+                            return -1024;
+                    }
+                }
+
+                return 1;
+            }
+            function isOK(pos, s, val) {
+                var r = Math.floor(s / 9);
+                var c = s % 9;
+                for (x = 0; x < c; x++)
+                    if (pos[r * 9 + x] == val)
+                        return false;
+                for (x = 0; x < r; x++)
+                    if (pos[x * 9 + c] == val)
+                        return false;
+
+                /* validate block */
+                var b_r = Math.floor(r / 3);
+                var b_c = Math.floor(c / 3);
+                for (var x = 0; x < 3; x++)
+                    for (var y = 0; y < 3; y++) {
+                        var a = (b_r * 3 + x) * 9 + (b_c * 3 + y);
+                        if (a >= s)
+                            return true;
+                        if (pos[a] == val)
+                            return false;
+                    }
+
+                return true;
+            }
+
+            function solve_r(s) {
+                /* animate */
+                recs++;
+                if (animate) {
+                    animate_count = (animate_count + 1) % animate_delay;
+                    if (animate_count == 0)
+                        fillIn(test_pos, s);
+                }
+
+                if (s == 81) {
+                    /* evaluate */
+                    if (validate(test_pos) == 1)
+                        return true;
+                    return false;
+                }
+
+                /* no choice to be made */
+                if (constraints[s][0]) {
+                    test_pos[s] = constraints[s][1];
+                    return solve_r(s + 1);
+                }
+
+                /* jiggle the pointers */
+                for (var x = 2; x < 11; x++) {
+                    if (constraints[s][x] == 0)
+                        return false;
+
+                    if (isOK(test_pos, s, constraints[s][x])) {
+                        test_pos[s] = constraints[s][x];
+                        if (solve_r(s + 1) == true)
+                            return true;
+                    }
+                }
+                return false;
+            }
+
+            function fillIn(pos, till) {
+                for (var x = 0; x < till; x++) {
+                    var r = Math.floor(x / 9);
+                    var c = x % 9;
+                    if (pos[x] == 0)
+                        document.getElementById("box" + r + "-" + c).value = "";
+                    else
+                        document.getElementById("box" + r + "-" + c).value = pos[x];
+                }
+            }
+
+            function solveme() {
+                status("Solving...");
+                if (!getBoard())
+                    return;
+                animate = document.getElementById("animatebox").checked;
+                getConstraints(board);
+                recs = 0;
+                var stat = solve_r(0);
+                if (stat) {
+                    status("Board solved with " + recs + " calls.");
+                    fillIn(test_pos, 81);
+                } else {
+                    status("Board has no solution.");
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+     <form name="solver" action="#">
+	<div class="rule">
+		<input id="box0-0" maxlength="1">
+		<input id="box0-1" maxlength="1">
+		<input id="box0-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box0-3" maxlength="1">
+		<input id="box0-4" maxlength="1">
+		<input id="box0-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box0-6" maxlength="1">
+		<input id="box0-7" maxlength="1">
+		<input id="box0-8" maxlength="1">
+	<br>
+		<input id="box1-0" maxlength="1">
+		<input id="box1-1" maxlength="1">
+		<input id="box1-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box1-3" maxlength="1"> 
+		<input id="box1-4" maxlength="1">
+		<input id="box1-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box1-6" maxlength="1"> 
+		<input id="box1-7" maxlength="1">
+		<input id="box1-8" maxlength="1">
+	<br>
+		<input id="box2-0" maxlength="1">
+		<input id="box2-1" maxlength="1">
+		<input id="box2-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box2-3" maxlength="1">
+		<input id="box2-4" maxlength="1">
+		<input id="box2-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box2-6" maxlength="1">
+		<input id="box2-7" maxlength="1">
+		<input id="box2-8" maxlength="1">
+	<br> <hr>
+		<input id="box3-0" maxlength="1">
+		<input id="box3-1" maxlength="1">
+		<input id="box3-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box3-3" maxlength="1">
+		<input id="box3-4" maxlength="1">
+		<input id="box3-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box3-6" maxlength="1">
+		<input id="box3-7" maxlength="1">
+		<input id="box3-8" maxlength="1">
+	<br> 
+		<input id="box4-0" maxlength="1">
+		<input id="box4-1" maxlength="1">
+		<input id="box4-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box4-3" maxlength="1">
+		<input id="box4-4" maxlength="1">
+		<input id="box4-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box4-6" maxlength="1">
+		<input id="box4-7" maxlength="1">
+		<input id="box4-8" maxlength="1">
+	<br>
+		<input id="box5-0" maxlength="1">
+		<input id="box5-1" maxlength="1">
+		<input id="box5-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box5-3" maxlength="1">
+		<input id="box5-4" maxlength="1">
+		<input id="box5-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box5-6" maxlength="1">
+		<input id="box5-7" maxlength="1">
+		<input id="box5-8" maxlength="1">
+	<br> <hr>
+		<input id="box6-0" maxlength="1">
+		<input id="box6-1" maxlength="1">
+		<input id="box6-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box6-3" maxlength="1">
+		<input id="box6-4" maxlength="1">
+		<input id="box6-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box6-6" maxlength="1">
+		<input id="box6-7" maxlength="1">
+		<input id="box6-8" maxlength="1">
+	<br> 
+		<input id="box7-0" maxlength="1">
+		<input id="box7-1" maxlength="1">
+		<input id="box7-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box7-3" maxlength="1">
+		<input id="box7-4" maxlength="1">
+		<input id="box7-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box7-6" maxlength="1">
+		<input id="box7-7" maxlength="1">
+		<input id="box7-8" maxlength="1">
+	<br>
+		<input id="box8-0" maxlength="1">
+		<input id="box8-1" maxlength="1">
+		<input id="box8-2" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box8-3" maxlength="1">
+		<input id="box8-4" maxlength="1">
+		<input id="box8-5" maxlength="1"> <span class="hspacer"> </span>
+		<input id="box8-6" maxlength="1">
+		<input id="box8-7" maxlength="1">
+		<input id="box8-8" maxlength="1">
+	<p>
+	</p></div>
+	<b>Testbed:</b> AMD Athlon 64 x2 2 GHz, WinXP, Firefox 2.0.0.8<br>
+	<button onclick="fillIn(testcase[0], 81)">Test case 1 (complete)</button> About 0 seconds. <br>	
+	<button onclick="fillIn(testcase[1], 81)">Test case 2 (easy)</button> Less than <b>1</b> second.<br>
+	<button onclick="fillIn(testcase[2], 81)">Test case 3 (hard)</button> About <b>4</b> seconds (animated). <br>	
+	<button onclick="fillIn(testcase[3], 81)">Test case 4 ('evil')</button>	About <b>2</b> seconds (animated), <b>1</b> (not animated). <br>
+	<button onclick="fillIn(testcase[4], 81)">"Ocean" (very hard)</button> About <b>24</b> seconds (not animated) with 4 Javascript timeout prompts. <br>
+	<button onclick="fillIn(testcase[5], 81)">"Al Escargot" (supposedly hardest possible)</button> About <b>7</b> seconds (animated).<br>
+	<button type="reset">Clear board</button> Enter your own Sudoku board.<p>
+
+		<button onclick="solveme()"><b>Solve me!</b></button> <br>	
+		<input type="checkbox" id="animatebox" value="1">animate <b>(much slower)</b>
+	</p></form>
+    </body>
+</html>
